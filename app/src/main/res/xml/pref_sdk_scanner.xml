@@ -1,0 +1,38 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+            android:key="sdk_scan_window"
+            android:title="Scan Time"
+            android:defaultValue="3000"
+            android:selectAllOnFocus="true"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:maxLines="1"/>
+
+    <EditTextPreference
+            android:key="sdk_scan_interval"
+            android:title="Scan Interval"
+            android:defaultValue="700"
+            android:selectAllOnFocus="true"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:maxLines="1"/>
+    <EditTextPreference
+            android:key="sdk_scan_serial_num"
+            android:title="Beacon Serial Number to be monitored"
+            android:defaultValue="B0005618"
+            android:selectAllOnFocus="true"
+            android:inputType="textCapCharacters"
+            android:singleLine="true"
+            android:maxLines="1"/>
+    <SwitchPreference
+            android:key="smooth_switch"
+            android:title="Smooth RSSI"
+            android:summary="Use smoothing RSSI or raw RSSI in display"
+            android:defaultValue="true"/>
+    <SwitchPreference
+            android:key="lowpower_switch"
+            android:title="Low Power Mode"
+            android:summary="Scan in foreground in low power mode"
+            android:defaultValue="false"/>
+
+</PreferenceScreen>
