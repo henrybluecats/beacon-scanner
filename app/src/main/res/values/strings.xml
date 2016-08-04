@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NativeScanner</string>
+    <string name="app_name">Beacon Scanner</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
