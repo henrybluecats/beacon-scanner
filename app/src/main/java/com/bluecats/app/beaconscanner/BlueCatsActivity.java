@@ -9,6 +9,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class BlueCatsActivity extends BaseChartActivity {
     BCBeaconManager mBCBeaconManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate1");
         super.onCreate(savedInstanceState);
         mBCBeaconManager = new BCBeaconManager();
         setTitle("BlueCatsSDK");
@@ -38,14 +40,14 @@ public class BlueCatsActivity extends BaseChartActivity {
         scanInterval = Utils.getScanInterval(this, Utils.TYPE_SDK_SCANNER);
         isSmoothRssi = Utils.isSmoothingRSSI(this);
         isLowPowerMode = Utils.isLowPowerInForeground(this);
-
+        Log.d(TAG, "onCreate2");
         String sn = Utils.getSerialNumber(this);
         if (sn.length()>0) {
             mSerialNumber = sn;
         }
 
         Toast.makeText(this, scanWindow+"s on, "+scanInterval+"s off. SN:"+mSerialNumber+",low power:"+isLowPowerMode, Toast.LENGTH_LONG).show();
-
+        Log.d(TAG, "onCreate3");
         setupLineData();
         Map<String, String> options = new HashMap<>();
         options.put("BC_OPTION_SCAN_TIME", String.valueOf(scanWindow));
@@ -57,7 +59,7 @@ public class BlueCatsActivity extends BaseChartActivity {
         BlueCatsSDK.setOptions(options);
         BlueCatsSDK.startPurringWithAppToken(this, APP_TOKEN);
         mBCBeaconManager.registerCallback(mBeaconManagerCallback);
-
+        Log.d(TAG, "onCreate4");
         if (savedInstanceState != null) {
             int itemCnt = savedInstanceState.getInt("allitems_count", 0);
             if (itemCnt > 0) {
@@ -83,10 +85,12 @@ public class BlueCatsActivity extends BaseChartActivity {
                 }
             }
         }
+        Log.d(TAG, "onCreate5");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState");
         LineData data = mChart.getData();
         int cnt = data.getDataSetCount();
         outState.putInt("dataset_count", cnt);
@@ -100,7 +104,7 @@ public class BlueCatsActivity extends BaseChartActivity {
         }
 
         outState.putInt("allitems_count", mAllItems.size());
-
+        Log.d(TAG, "onSaveInstanceState1");
         cnt = 0;
         for(Map.Entry<String, Item> mapEntry: mAllItems.entrySet()) {
             StringBuilder sb = new StringBuilder();
@@ -116,19 +120,24 @@ public class BlueCatsActivity extends BaseChartActivity {
             cnt++;
         }
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState2");
     }
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
         mBCBeaconManager.unregisterCallback(mBeaconManagerCallback);
         BlueCatsSDK.stopPurring();
         super.onDestroy();
+        Log.d(TAG, "onDestroy2");
     }
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "onPause1");
         BlueCatsSDK.didEnterBackground();
         super.onPause();
+        Log.d(TAG, "onPause2");
     }
 
     protected void setupLineData() {
@@ -147,8 +156,10 @@ public class BlueCatsActivity extends BaseChartActivity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume");
         super.onResume();
         BlueCatsSDK.didEnterForeground();
+        Log.d(TAG, "onResume1");
 
     }
 

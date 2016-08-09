@@ -30,7 +30,13 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.2.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile 'com.android.support:design:24.1.1'
-    compile 'com.bluecats:bluecats-android-sdk:2.0.1-dev-2'
     compile 'com.android.support:support-v4:24.1.1'
     compile 'com.google.android.gms:play-services:9.4.0'
+    compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile 'com.google.android.gms:play-services-auth:9.4.0'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
+
+    compile 'com.bluecats:bluecats-android-sdk:2.0.1-dev-2'
+//    compile project(path: ':bluecats-android-sdk', configuration: 'debug')
+
 }

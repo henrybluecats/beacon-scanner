@@ -1,6 +1,7 @@
 package com.bluecats.app.beaconscanner;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -21,9 +22,11 @@ import butterknife.OnClick;
 
 public class FirstActivity extends AppCompatActivity {
     private static final int PERMISSION_RESPONSE = 0x100;
+    private static final int PERMISSION_SDCARD_RESPONSE = 0x101;
 
     @BindView(R.id.native_scan) View btn1;
     @BindView(R.id.sdk_scan) View btn2;
+    @BindView(R.id.sdk_rssi_rec) View btn3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +34,8 @@ public class FirstActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         btn1.setEnabled(false);
         btn2.setEnabled(false);
-        new Handler().post(new Runnable() {
+        btn3.setEnabled(false);
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 int permissionCheck = ContextCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -45,9 +49,23 @@ public class FirstActivity extends AppCompatActivity {
                     btn1.setEnabled(true);
                     btn2.setEnabled(true);
                 }
+                permissionCheck = ContextCompat.checkSelfPermission(FirstActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(FirstActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_SDCARD_RESPONSE);
+                    btn3.setEnabled(false);
+                } else {
+                    btn3.setEnabled(true);
+                }
 
             }
-        });
+        }, 2000);
+    }
+
+    @OnClick(R.id.sdk_rssi_rec)
+    protected void recordingSDK() {
+        startActivity(new Intent(this, RssiRecorderActivity.class));
     }
 
     @OnClick(R.id.sdk_scan)
@@ -69,7 +87,13 @@ public class FirstActivity extends AppCompatActivity {
                 btn1.setEnabled(true);
                 btn2.setEnabled(true);
             } else {
-                Toast.makeText(this, "permission denied.", Toast.LENGTH_LONG);
+                Toast.makeText(this, "permission of location service denied.", Toast.LENGTH_LONG);
+            }
+        } else if (requestCode == PERMISSION_SDCARD_RESPONSE) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                btn3.setEnabled(true);
+            } else {
+                Toast.makeText(this, "permission of writing sdcard denied.", Toast.LENGTH_LONG);
             }
         }
     }

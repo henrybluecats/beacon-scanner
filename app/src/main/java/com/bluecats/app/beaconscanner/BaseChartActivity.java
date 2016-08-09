@@ -1,12 +1,15 @@
 package com.bluecats.app.beaconscanner;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.AxisValueFormatter;
+import com.github.mikephil.charting.formatter.FormattedStringCache;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -16,6 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +47,7 @@ public class BaseChartActivity extends AppCompatActivity {
         if (data != null) {
             for( int i = 0; i < data.getDataSetCount(); i++) {
                 ILineDataSet set = data.getDataSetByIndex(i);
-                set.addEntry(new Entry(set.getEntryCount(), getRssiValue(i)));
+                set.addEntry(new Entry(data.getEntryCount(), getRssiValue(i)));
             }
             data.notifyDataChanged();
 
@@ -100,6 +105,25 @@ public class BaseChartActivity extends AppCompatActivity {
         xl.setDrawGridLines(true);
         xl.setAvoidFirstLastClipping(true);
         xl.setEnabled(true);
+        xl.setGranularity(1L);
+//        xl.setValueFormatter(new AxisValueFormatter() {
+//
+//            private FormattedStringCache.Generic<Long, Date> mFormattedStringCache =
+//                    new FormattedStringCache.Generic<>(new SimpleDateFormat("mm:ss.SSS"));
+//
+//            @Override
+//            public String getFormattedValue(float value, AxisBase axis) {
+//                Long v = (long) value;
+//                String txt = mFormattedStringCache.getFormattedValue(new Date(v), v);
+//                Log.d(TAG, "time: "+txt);
+//                return txt;
+//            }
+//
+//            @Override
+//            public int getDecimalDigits() {
+//                return 0;
+//            }
+//        });
 
         YAxis leftAxis = mChart.getAxisLeft();
 //        leftAxis.setTypeface(mTfLight);
