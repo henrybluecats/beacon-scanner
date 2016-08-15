@@ -9,3 +9,5 @@
 /build
 /captures
 /bcrssirecords/*.csv
+*.csv
+app/libs/

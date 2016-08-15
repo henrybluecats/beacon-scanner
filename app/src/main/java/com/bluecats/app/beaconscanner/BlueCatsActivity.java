@@ -25,6 +25,7 @@ public class BlueCatsActivity extends BaseChartActivity {
     boolean isSmoothRssi = true;
     String mSerialNumber = "B0005618";
     boolean isLowPowerMode = false;
+    boolean isUsingScanningOptions = false;
 
     private static final String ENTER_EXIT = "Enter/Exit";
     private static final String APP_TOKEN = "9a04cd56-6a40-4e2e-b04e-2d0a4e352abf"; // "BC Data Testing" "Android Test"
@@ -40,23 +41,32 @@ public class BlueCatsActivity extends BaseChartActivity {
         scanInterval = Utils.getScanInterval(this, Utils.TYPE_SDK_SCANNER);
         isSmoothRssi = Utils.isSmoothingRSSI(this);
         isLowPowerMode = Utils.isLowPowerInForeground(this);
+        isUsingScanningOptions = Utils.isUsingScanningOptions(this);
         Log.d(TAG, "onCreate2");
         String sn = Utils.getSerialNumber(this);
         if (sn.length()>0) {
             mSerialNumber = sn;
         }
 
-        Toast.makeText(this, scanWindow+"s on, "+scanInterval+"s off. SN:"+mSerialNumber+",low power:"+isLowPowerMode, Toast.LENGTH_LONG).show();
+        if (isUsingScanningOptions) {
+            Toast.makeText(this, scanWindow+"s on, "+scanInterval+"s off. SN:"+mSerialNumber+",low power:"+isLowPowerMode, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "SN:"+mSerialNumber+",low power:"+isLowPowerMode, Toast.LENGTH_LONG).show();
+        }
+
         Log.d(TAG, "onCreate3");
         setupLineData();
         Map<String, String> options = new HashMap<>();
-        options.put("BC_OPTION_SCAN_TIME", String.valueOf(scanWindow));
-        options.put("BC_OPTION_TIME_BETWEEN_SCANS_HIGH_FREQUENCY", String.valueOf(scanInterval));
+        if (isUsingScanningOptions) {
+            options.put("BC_OPTION_SCAN_TIME", String.valueOf(scanWindow));
+            options.put("BC_OPTION_TIME_BETWEEN_SCANS_HIGH_FREQUENCY", String.valueOf(scanInterval));
+        }
 
         options.put(BlueCatsSDK.BC_OPTION_CACHE_ALL_BEACONS_FOR_APP, "true");
         options.put(BlueCatsSDK.BC_OPTION_USE_RSSI_SMOOTHING, String.valueOf(isSmoothRssi));
         options.put("BC_OPTION_LOW_POWER_IN_FOREGROUND", String.valueOf(isLowPowerMode));
         BlueCatsSDK.setOptions(options);
+
         BlueCatsSDK.startPurringWithAppToken(this, APP_TOKEN);
         mBCBeaconManager.registerCallback(mBeaconManagerCallback);
         Log.d(TAG, "onCreate4");
@@ -145,7 +155,11 @@ public class BlueCatsActivity extends BaseChartActivity {
         item.idx = 0;
         mAllItems.put(mSerialNumber, item);
         LineData data = new LineData();
-        data.addDataSet(createSet(0, mSerialNumber+","+scanWindow+","+scanInterval+","+isSmoothRssi+","+isLowPowerMode));
+        if (isUsingScanningOptions) {
+            data.addDataSet(createSet(0, mSerialNumber + "," + scanWindow + "," + scanInterval + "," + isSmoothRssi + "," + isLowPowerMode));
+        } else {
+            data.addDataSet(createSet(0, mSerialNumber + "," + isSmoothRssi + "," + isLowPowerMode));
+        }
 
         item = new Item();
         item.idx = 1;

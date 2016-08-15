@@ -72,4 +72,10 @@ public class Utils {
         boolean str = sp.getBoolean("lowpower_switch", false);
         return str;
     }
+
+    public static boolean isUsingScanningOptions(Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean str = sp.getBoolean("sdk_option_switch", false);
+        return str;
+    }
 }

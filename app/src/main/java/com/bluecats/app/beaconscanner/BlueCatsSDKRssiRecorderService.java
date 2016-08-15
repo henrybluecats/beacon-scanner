@@ -13,7 +13,6 @@ import android.os.IBinder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +30,7 @@ public class BlueCatsSDKRssiRecorderService extends Service {
     boolean isSmoothRssi = true;
     String mSerialNumber = "B0005618";
     boolean isLowPowerMode = false;
+    boolean isUsingScanningOptions = false;
     PrintWriter mWriter;
     boolean isBeaconEntered = true;
     int lastRssi = 0;
@@ -45,6 +45,7 @@ public class BlueCatsSDKRssiRecorderService extends Service {
         scanInterval = Utils.getScanInterval(this, Utils.TYPE_SDK_SCANNER);
         isSmoothRssi = Utils.isSmoothingRSSI(this);
         isLowPowerMode = Utils.isLowPowerInForeground(this);
+        isUsingScanningOptions = Utils.isUsingScanningOptions(this);
 
         String sn = Utils.getSerialNumber(this);
         if (sn.length()>0) {
@@ -147,13 +148,16 @@ public class BlueCatsSDKRssiRecorderService extends Service {
 
     public void startRecording() {
         Map<String, String> options = new HashMap<>();
-        options.put("BC_OPTION_SCAN_TIME", String.valueOf(scanWindow));
-        options.put("BC_OPTION_TIME_BETWEEN_SCANS_HIGH_FREQUENCY", String.valueOf(scanInterval));
+        if (isUsingScanningOptions) {
+            options.put("BC_OPTION_SCAN_TIME", String.valueOf(scanWindow));
+            options.put("BC_OPTION_TIME_BETWEEN_SCANS_HIGH_FREQUENCY", String.valueOf(scanInterval));
+        }
 
         options.put(BlueCatsSDK.BC_OPTION_CACHE_ALL_BEACONS_FOR_APP, "true");
         options.put(BlueCatsSDK.BC_OPTION_USE_RSSI_SMOOTHING, String.valueOf(isSmoothRssi));
         options.put("BC_OPTION_LOW_POWER_IN_FOREGROUND", String.valueOf(isLowPowerMode));
         BlueCatsSDK.setOptions(options);
+
         BlueCatsSDK.startPurringWithAppToken(this, APP_TOKEN);
         mBCBeaconManager.registerCallback(mBeaconManagerCallback);
 

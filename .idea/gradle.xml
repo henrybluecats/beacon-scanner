@@ -10,12 +10,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$USER_HOME$/devhome/bluecats/bluecats_bcsdk-android/bluecats-android-sdk" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$USER_HOME$/devhome/bluecats/bluecats_bcsdk-android/bluecats-android-sdk" />
           </set>
         </option>
       </GradleProjectSettings>

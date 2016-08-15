@@ -1,4 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+            android:key="sdk_option_switch"
+            android:title="Using scanning options"
+            android:summary="SDK running with default scanning options or local options"
+            android:defaultValue="false"/>
     <EditTextPreference
             android:key="sdk_scan_window"
             android:title="Scan Time"
